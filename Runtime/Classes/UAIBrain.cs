@@ -760,7 +760,7 @@ namespace Smidgenomics.Unity.UAI
 			ref readonly BucketRecord bucket = ref _bucketRecords[_CurrentBucketID];
 			int aIndex = bucket.actionIndex;
 
-			var selector = bucket.bucketSO._actionSelector;
+			var selector = bucket.actionSelector;
 
 			int bestRelativeIndex = selector.SelectIndex(bucket.actionCount, i =>
 			{
