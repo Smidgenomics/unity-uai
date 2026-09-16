@@ -9,9 +9,9 @@
     "url": "git+https://github.com/Smidgens/unity-uai.git"
   },
   "author": {
-    "name": "Unnar Krist",
+    "name": "Smidgenomics",
     "url": "https://github.com/Smidgens"
   },
-  "hideInEditor": false,
-  "keywords":[]
+  "keywords": [],
+  "unity": "2023.3"
 }
