@@ -70,8 +70,22 @@ namespace Smidgenomics.Unity.UAI.Editor
 			// ? Color.black.Fade(0.2f)
 			// : Color.black.Fade(0.22f);
 
+			var divColor = EditorGUIUtility.isProSkin
+			? Color.black * 0.2f
+			: Color.black * 0.2f;
+
 			_assetList.drawElementBackgroundCallback = (rect, index, active, focused) =>
 			{
+				var sep = rect;
+				
+				EditorGUI.DrawRect(sep.SliceTop(1f), divColor);
+
+				if (index == _assetList.count - 1)
+				{
+					sep = sep.SliceBottom(1f);
+					EditorGUI.DrawRect(sep, divColor);
+				}
+				
 				if (_assetList.index == index && index > -1)
 				{
 					var left = rect.SliceLeft(2f);
@@ -83,8 +97,10 @@ namespace Smidgenomics.Unity.UAI.Editor
 					rect.width -= 2;
 					rect.center = c;
 					EditorGUI.DrawRect(rect, selectColor.Fade(0.5f));
-					GUI.Box(rect, GUIContent.none, EditorStyles.helpBox);
+					// GUI.Box(rect, GUIContent.none, EditorStyles.helpBox);
 				}
+				
+				
 			};
 		}
 
