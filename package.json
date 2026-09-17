@@ -6,12 +6,16 @@
   "license": "MIT NON-AI",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Smidgens/unity-uai.git"
+    "url": "git+https://github.com/Smidgenomics/unity-uai.git"
   },
   "author": {
     "name": "Smidgenomics",
-    "url": "https://github.com/Smidgens"
+    "url": "https://github.com/Smidgenomics"
   },
   "keywords": [],
-  "unity": "2023.3"
+  "unity": "2023.2",
+  "unityRelease": "22f1",
+  "documentationUrl": "https://github.com/Smidgenomics/unity-uai",
+  "licensesUrl": "https://github.com/Smidgenomics/unity-uai/blob/master/LICENSE.md",
+  "changelogUrl": "https://github.com/Smidgenomics/unity-uai/blob/master/CHANGELOG.md"
 }
