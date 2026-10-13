@@ -11,6 +11,7 @@ namespace Smidgenomics.Unity.UAI
 	using System.ComponentModel;
 
 	[System.Serializable]
+	[DisplayName("Selector")]
 	public abstract class UAISelector
 	{
 		// Assumes sorted values in descending order

@@ -144,7 +144,7 @@ namespace Smidgenomics.Unity.UAI.Editor
 					var m = tType.GetMethod(am.Name, bFlags);
 					if (m?.DeclaringType != am.DeclaringType)
 					{
-						_overriddenMethods.Add(am.Name.ToSentence());
+						_overriddenMethods.Add(ObjectNames.NicifyVariableName(am.Name));
 					}
 				}
 				var tp = "";

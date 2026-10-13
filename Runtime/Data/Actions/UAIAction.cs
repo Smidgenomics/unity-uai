@@ -9,10 +9,12 @@ namespace Smidgenomics.Unity.UAI
 	using UnityEngine;
 	using System;
 	using System.Collections.Generic;
+	using System.ComponentModel;
 	using IEnumerator = System.Collections.IEnumerator;
 
 	// action base
 	[UAIListField(nameof(_weight), 30f)]
+	[DisplayName("Action")]
 	public abstract class UAIAction :  UAINode, IUAIAction
 	{
 		/// <summary>
@@ -21,6 +23,18 @@ namespace Smidgenomics.Unity.UAI
 		public EUAIActionStatus GetActionStatus()
 		{
 			return _status;
+		}
+
+		public T GetActionTrait<T>() where T : UAIActionTrait
+		{
+			foreach (var t in _traits)
+			{
+				if (t is T found)
+				{
+					return found;
+				}
+			}
+			return null;
 		}
 
 		/// <summary>
@@ -68,10 +82,10 @@ namespace Smidgenomics.Unity.UAI
 			return true;
 		}
 
-		public string GetStatusText()
-		{
-			return _statusText;
-		}
+		// public string GetStatusText()
+		// {
+		// 	return _statusText;
+		// }
 
 		protected void FinishAction()
 		{
@@ -97,6 +111,7 @@ namespace Smidgenomics.Unity.UAI
 
 		internal Action onActionFinished;
 
+		[HideInInspector]
 		[SerializeField] internal string _statusText = string.Empty;
 
 		[Min(0f)]
@@ -119,6 +134,11 @@ namespace Smidgenomics.Unity.UAI
 
 		[HideInInspector]
 		[SerializeField] internal SOArray<UAIConsideration> _considerations = new();
+
+		[HideInInspector]
+		[UAIInstancedReference(typeUnique:true)]
+		[SerializeReference]
+		[SerializeField] internal UAIActionTrait[] _traits = Array.Empty<UAIActionTrait>();
 
 		internal EUAIActionStatus _status = EUAIActionStatus.Inactive;
 
@@ -150,8 +170,10 @@ namespace Smidgenomics.Unity.UAI
 
 namespace Smidgenomics.Unity.UAI.Editor
 {
+	using System;
 	using UnityEngine;
 	using UnityEditor;
+	using UnityEditorInternal;
 
 	[CustomEditor(typeof(UAIAction), true)]
 	internal sealed class _UAIAction : _UAIScriptableObject
@@ -160,18 +182,95 @@ namespace Smidgenomics.Unity.UAI.Editor
 		{
 			DrawDivider();
 			serializedObject.UpdateIfRequiredOrScript();
+			_traitList.DoLayoutList();
+			serializedObject.ApplyModifiedProperties();
+			
+			serializedObject.UpdateIfRequiredOrScript();
 			_considerationView.OnListGUI();
 			serializedObject.ApplyModifiedProperties();
 		}
 
 		private NestedAssetList _considerationView;
+		private ReorderableList _traitList;
 		private SerializedProperty _defaultCooldown;
 		private GUIContent _foldoutLabel;
+
+		private static readonly Lazy<GUIContent> _ICO_ADD = GetLazyUnityIcon("Toolbar Plus More");
+		private static readonly Lazy<GUIContent> _ICO_RM = GetLazyUnityIcon("Toolbar Minus");
+		
+		private static Lazy<GUIContent> GetLazyUnityIcon(string name)
+		{
+			return new Lazy<GUIContent>(() => EditorGUIUtility.IconContent(name));
+		}
 
 		protected override void OnInit()
 		{
 			var listProp = serializedObject.FindProperty(nameof(UAIAction._considerations));
 			_considerationView = CreateConsiderationList(listProp);
+
+			var traitArr = serializedObject.FindProperty(nameof(UAIAction._traits));
+			_traitList = new ReorderableList(serializedObject, traitArr)
+			{
+				displayAdd = false,
+				displayRemove = false,
+				elementHeightCallback = i =>
+				{
+					var item = traitArr.GetArrayElementAtIndex(i);
+					return EditorGUI.GetPropertyHeight(item, GUIContent.none);
+				},
+				drawElementCallback = (r, i, f, a) =>
+				{
+					var item = traitArr.GetArrayElementAtIndex(i);
+					EditorGUI.PropertyField(r, item, GUIContent.none);
+				}
+			};
+
+			_traitList.drawHeaderCallback = r =>
+			{
+				var btnWidth = EditorStyles.iconButton.CalcSize(_ICO_ADD.Value).x;
+
+				var rmRect = r.SliceRight(btnWidth);
+				var addRect = r.SliceRight(btnWidth);
+
+				if (GUI.Button(addRect, _ICO_ADD.Value, EditorStyles.iconButton))
+				{
+					var dropdown = UAIEditorUtils.CreateTypeDropdown(typeof(UAIActionTrait), t =>
+					{
+						for (int i = 0; i < traitArr.arraySize; i++)
+						{
+							var aType = traitArr.GetArrayElementAtIndex(i).managedReferenceValue?.GetType();
+							if (aType == t)
+							{
+								return false;
+							}
+						}
+						return true;
+					}, newType =>
+					{
+						traitArr.arraySize++;
+						var newItem = traitArr.GetArrayElementAtIndex(traitArr.arraySize - 1);
+						newItem.managedReferenceValue = Activator.CreateInstance(newType);
+						serializedObject.ApplyModifiedProperties();
+
+					}, null);
+					
+					dropdown.Show(addRect, 400f);
+					
+					
+					
+				}
+				
+				if (GUI.Button(rmRect, _ICO_RM.Value, EditorStyles.iconButton))
+				{
+					if (_traitList.index < 0 || _traitList.index >= traitArr.arraySize)
+					{
+						return;
+					}
+					traitArr.DeleteArrayElementAtIndex(_traitList.index);
+				}
+				GUI.Label(r, traitArr.displayName);
+			};
+
 		}
 
 		private void OnDisable()

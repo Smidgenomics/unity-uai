@@ -8,6 +8,7 @@ namespace Smidgenomics.Unity.UAI
 {
 	using UnityEngine;
 	using System;
+	using System.ComponentModel;
 
 	/// <summary>
 	/// Background logic
@@ -16,6 +17,7 @@ namespace Smidgenomics.Unity.UAI
 	/// Notes:
 	/// - Service instances are always reused
 	/// </summary>
+	[DisplayName("Service")]
 	public abstract class UAIService : UAINode, IUAIService
 	{
 		/// <summary>

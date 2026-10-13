@@ -4,8 +4,6 @@
 
 namespace Smidgenomics.Unity.UAI
 {
-	using UnityEngine;
-	using System;
 	using IEnumerator = System.Collections.IEnumerator;
 
 	/// <summary>
@@ -15,12 +13,11 @@ namespace Smidgenomics.Unity.UAI
 	{
 		// display info
 		public string Name { get; }
-		
+
 		// selectable?
 		public bool Enabled { get; }
-		
-		// AI status text
-		public string GetStatusText();
+
+		public T GetActionTrait<T>() where T : UAIActionTrait;
 
 		// currently cancelable?
 		public bool CanCancelAction();

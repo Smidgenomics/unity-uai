@@ -48,7 +48,7 @@ namespace Smidgenomics.Unity.UAI.Editor
 			_inlineFields = inlineFields;
 			_outerProp = prop;
 			_arrayProp = prop.FindPropertyRelative(nameof(SOArray<UAIScriptableObject>._array));
-			_addDropdown = UAIEditorUtils.CreateTypeDropdown(ElementType, OnAddOption, null);
+			_addDropdown = UAIEditorUtils.CreateTypeDropdown(ElementType, null, OnAddOption, null);
 			
 			_assetList = new ReorderableList(_arrayProp.serializedObject, _arrayProp)
 			{

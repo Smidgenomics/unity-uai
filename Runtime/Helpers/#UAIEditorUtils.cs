@@ -71,9 +71,14 @@ namespace Smidgenomics.Unity.UAI.Editor
 			return true;
 		}
 		
-		public static GenericDropdown<Type> CreateTypeDropdown(Type baseType,  Action<Type> fn, string defaultLabel = "(none)")
+		public static GenericDropdown<Type> CreateTypeDropdown(Type baseType, Func<Type,bool> includeFn,  Action<Type> fn, string defaultLabel = "(none)")
 		{
-			var dropdown = GenericDropdown<Type>.Create(ObjectNames.NicifyVariableName(baseType.Name));
+			var dName = baseType.GetCustomAttribute<DisplayNameAttribute>();
+			var rootName = dName != null
+			? dName.DisplayName
+			: ObjectNames.NicifyVariableName(baseType.Name);
+
+			var dropdown = GenericDropdown<Type>.Create(rootName);
 			dropdown.onSelected = fn;
 			
 			var types = GetDerivedTypes(baseType);
@@ -89,6 +94,16 @@ namespace Smidgenomics.Unity.UAI.Editor
 			foreach (var type in types)
 			{
 				if (type.IsDefined(typeof(ObsoleteAttribute)))
+				{
+					continue;
+				}
+				
+				if (!type.IsDefined(typeof(SerializableAttribute)))
+				{
+					continue;
+				}
+
+				if (includeFn != null && !includeFn.Invoke(type))
 				{
 					continue;
 				}

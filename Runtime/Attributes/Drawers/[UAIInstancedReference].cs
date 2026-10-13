@@ -12,7 +12,16 @@ namespace Smidgenomics.Unity.UAI
 	[Conditional("UNITY_EDITOR")]
 	internal sealed class UAIInstancedReferenceAttribute : PropertyAttribute
 	{
+
+		public UAIInstancedReferenceAttribute(bool typeUnique = false, string dValueLabel = "(none)")
+		{
+			this.typeUnique = typeUnique;
+			this.defaultValueLabel = dValueLabel;
+		}
+
 		public string defaultValueLabel { get; set; } = "(none)";
+		internal bool typeUnique { get; }
+		
 	}
 }
 
@@ -64,6 +73,12 @@ namespace Smidgenomics.Unity.UAI
 				}
 
 				var extraIndent = 1;
+				
+				if (fieldInfo.FieldType.IsArray)
+				{
+					extraIndent = 0;
+				}
+				
 				EditorGUI.indentLevel += extraIndent;
 				foreach (var field in _cachedFields.Item2)
 				{
@@ -109,7 +124,9 @@ namespace Smidgenomics.Unity.UAI
 			{
 				btnLabel = dn.DisplayName;
 			}
-			
+
+			var attr = (attribute as UAIInstancedReferenceAttribute)!;
+
 			_btnLabel.text = btnLabel;
 
 			if (!EditorGUI.DropdownButton(pos, _btnLabel, FocusType.Keyboard))
@@ -117,7 +134,30 @@ namespace Smidgenomics.Unity.UAI
 				return;
 			}
 
-			var dropdown = UAIEditorUtils.CreateTypeDropdown(GetFieldType(), newType =>
+			Func<Type, bool> includeFn = null;
+
+			var isArray = fieldInfo.FieldType.IsArray;
+
+			if (attr.typeUnique && fieldInfo.FieldType.IsArray)
+			{
+				var arrProp = prop.GetParentProperty();
+				includeFn = t =>
+				{
+					for (int i = 0; i < arrProp.arraySize; i++)
+					{
+						var aType = arrProp.GetArrayElementAtIndex(i).managedReferenceValue?.GetType();
+						if (aType == t)
+						{
+							return false;
+						}
+					}
+					return true;
+				};
+			}
+
+			var dLabel = isArray ? null : defLabel;
+
+			var dropdown = UAIEditorUtils.CreateTypeDropdown(GetFieldType(), includeFn, newType =>
 			{
 				if (newType == currentType)
 				{
@@ -133,31 +173,9 @@ namespace Smidgenomics.Unity.UAI
 				
 				prop.managedReferenceValue = Activator.CreateInstance(newType);
 				prop.serializedObject.ApplyModifiedProperties();
-			}, defLabel);
+			}, dLabel);
 			dropdown.currentValue = currentType;
-
 			dropdown.Show(pos, 400f);
-
-			// var m = UAIEditorUtils.CreateTypeMenu(GetFieldType(), o =>
-			// {
-			// 	var newType = (Type)o;
-			// 	if (newType == currentType)
-			// 	{
-			// 		return;
-			// 	}
-			//
-			// 	if (o == null)
-			// 	{
-			// 		prop.managedReferenceValue = null;
-			// 		prop.serializedObject.ApplyModifiedProperties();
-			// 		return;
-			// 	}
-			// 	
-			// 	prop.managedReferenceValue = Activator.CreateInstance(newType);
-			// 	prop.serializedObject.ApplyModifiedProperties();
-			// }, defLabel);
-			//
-			// m.DropDown(pos);
 			
 		}
 
