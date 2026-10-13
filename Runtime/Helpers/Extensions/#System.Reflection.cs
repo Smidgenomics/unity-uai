@@ -1,7 +1,5 @@
 // smidgens @ github
 
-// Resharper disable all
-
 #if UNITY_EDITOR
 
 namespace Smidgenomics.Unity.UAI
@@ -11,7 +9,7 @@ namespace Smidgenomics.Unity.UAI
 	using System.Reflection;
 	using System.Collections.Generic;
 
-	internal static partial class FieldInfo_
+	internal static class Reflection_
 	{
 		// can field be drawn by inspector
 		public static bool IsInspectorField(this FieldInfo f)
@@ -28,11 +26,7 @@ namespace Smidgenomics.Unity.UAI
 			// at this point, either the field is public, or private and using SerializeField
 			return true;
 		}
-	}
-
-	internal static partial class Type_
-	{
-
+		
 		/// <summary>
 		/// [Editor] Find all fields that Unity would default render in the inspector
 		/// </summary>
@@ -80,7 +74,6 @@ namespace Smidgenomics.Unity.UAI
 		| BindingFlags.Public
 		| BindingFlags.DeclaredOnly
 		| BindingFlags.Instance;
-
 	}
 
 }

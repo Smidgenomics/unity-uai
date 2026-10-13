@@ -2,7 +2,7 @@
 
 namespace Smidgenomics.Unity.UAI
 {
-	internal static partial class Array_
+	internal static class Array_
 	{
 		public static bool IsValidIndex<T>(this T[] arr, int i)
 		{
