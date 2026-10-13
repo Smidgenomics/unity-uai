@@ -14,7 +14,6 @@ namespace Smidgenomics.Unity.UAI
 
 	// action base
 	[UAIListField(nameof(_weight), 30f)]
-	[DisplayName("Action")]
 	public abstract class UAIAction :  UAINode, IUAIAction
 	{
 		/// <summary>

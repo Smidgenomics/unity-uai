@@ -7,25 +7,19 @@ namespace Smidgenomics.Unity.UAI
 	using UnityEngine;
 
 	/// <summary>
-	/// Used by UAI editor
+	/// Used by editor GUI
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class)]
 	[Conditional("UNITY_EDITOR")]
-	internal sealed class UAIDebugIconAttribute : System.Attribute
+	internal sealed class UAIDebugIconAttribute : Attribute
 	{
-		public UAIDebugIconAttribute(string textureGUID)
+		public UAIDebugIconAttribute(string texRef, string uv = null)
 		{
-			guid = textureGUID;
-			position = new Rect(0f, 0f, 1f, 1f);
+			this.texRef = texRef;
+			this.uv = UAIParse.ParseRect(uv, new Rect(0, 0, 1, 1));
 		}
 
-		public UAIDebugIconAttribute(string textureGUID, float x, float y, float w, float h)
-		{
-			guid = textureGUID;
-			position = new Rect(x, y, w, h);
-		}
-
-		internal readonly string guid;
-		internal readonly Rect position;
+		internal readonly string texRef;
+		internal readonly Rect uv;
 	}
 }

@@ -1,14 +1,21 @@
 // smidgens @ github
 
-// ReSharper disable All
-
 namespace Smidgenomics.Unity.UAI
 {
 	public enum EUAIActionStatus
 	{
 		Inactive,
+		/// <summary>
+		/// Currently running
+		/// </summary>
 		Active,
+		/// <summary>
+		/// Previously running and finished
+		/// </summary>
 		Finished,
+		/// <summary>
+		/// Previously running but cancelled
+		/// </summary>
 		Cancelled
 	}
 }
@@ -17,24 +24,13 @@ namespace Smidgenomics.Unity.UAI
 {
 	public enum EUAIRandomMethod
 	{
+		/// <summary>
+		/// Options have equal weights
+		/// </summary>
 		Uniform,
+		/// <summary>
+		/// Options have varying weights
+		/// </summary>
 		Weighted
 	}
 }
-
-// namespace Smidgenomics.Unity.UAI
-// {
-// 	/// <summary>
-// 	/// Editor helper
-// 	/// </summary>
-// 	[System.Flags]
-// 	internal enum EUAIActionOverrideFlags
-// 	{
-// 		None = 0,
-// 		ActivateAction = 1,
-// 		DeactivateAction = 2,
-// 		CanCancelAction = 4,
-// 		GetActionCooldown = 8,
-// 		GetWeightModifier = 16,
-// 	}
-// }

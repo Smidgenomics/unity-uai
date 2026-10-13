@@ -7,7 +7,8 @@ namespace Smidgenomics.Unity.UAI
 	using System.ComponentModel;
 
 	[DisplayName("Random Weighted")]
-	[System.Serializable]
+	[Serializable]
+	[UAIDebugIcon(UAIConstants.UAI_ATLAS_GUID, "56/8")]
 	public sealed class UAISelector_RandomWeighted : UAISelector
 	{
 		public override int SelectIndex(int count, Func<int, float> scoreFn)
@@ -21,11 +22,6 @@ namespace Smidgenomics.Unity.UAI
 			var minScore = topScore;
 			CollectMinScores(count, topIndex, minScore, scoreFn, out var indices, out var scores);
 			return indices[UAIMath.GetRandomArrayIndexWeighted<float>(scores)];
-		}
-
-		public override (string, Rect) GetDebugIcon()
-		{
-			return ("a1446d554144a4944b389210a34ff6b9", new Rect(0, 0.125f * 7, 0.125f, 0.125f));
 		}
 	}
 }

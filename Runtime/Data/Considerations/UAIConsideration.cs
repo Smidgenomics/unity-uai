@@ -7,7 +7,6 @@ namespace Smidgenomics.Unity.UAI
 
 	[UAIListField(nameof(_curve), 25f)]
 	[UAIListField(nameof(_invert), 22f)]
-	[DisplayName("Consideration")]
 	public abstract class UAIConsideration : UAIScriptableObject, IUAIConsideration
 	{
 		public abstract float GetScore(in UAIAgentContext context);

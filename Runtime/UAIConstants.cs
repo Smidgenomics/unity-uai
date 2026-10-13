@@ -1,10 +1,5 @@
 // smidgens @ github
 
-// ReSharper disable All
-
-#pragma warning disable 0414
-#pragma warning disable 0067
-
 namespace Smidgenomics.Unity.UAI
 {
 	internal static class UAIConstants
@@ -16,9 +11,6 @@ namespace Smidgenomics.Unity.UAI
 		public const string WIN_PATH_DEBUG = "Window/AI/UAI Monitor";
 		public const float MIN_COOLDOWN = 0f;
 		public const float MIN_SCORING_RATE = 0.1f;
-		
-		internal const string DEFAULT_CONSIDERATION_ICON_GUID = "d8ec218438d247b49a3a0f61ed39664d";
-		internal const string DEFAULT_ACTION_ICON_GUID = "b403041b6ec9a3744b4e92bc8014f7f6";
-		internal const string DEFAULT_SERVICE_ICON_GUID = "4e6505ad98dd97d4fb6960daf664cbb4";
+		internal const string UAI_ATLAS_GUID = "a1446d554144a4944b389210a34ff6b9";
 	}
 }

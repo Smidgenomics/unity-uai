@@ -12,21 +12,20 @@ namespace Smidgenomics.Unity.UAI.Editor
 	using System.ComponentModel;
 	using UnityEditor.Search;
 
-	/**
-	 *
-	 */
+	// misc helpers
 	internal static class UAIEditorUtils
 	{
-		public static IEnumerable<Type> GetDerivedTypes(Type baseType)
+		public static IEnumerable<Type> GetDerivedTypes(Type baseType, bool includeAbstract = false)
 		{
 			List<Type> outTypes = new();
 
 			foreach (var t in TypeCache.GetTypesDerivedFrom(baseType))
 			{
-				if (!t.IsAbstract)
+				if (t.IsAbstract && !includeAbstract)
 				{
-					outTypes.Add(t);
+					continue;
 				}
+				outTypes.Add(t);
 			}
 			return outTypes;
 		}
@@ -91,6 +90,8 @@ namespace Smidgenomics.Unity.UAI.Editor
 
 			Assembly currentAssembly = null;
 
+			var isUnityBase = typeof(UnityEngine.Object).IsAssignableFrom(baseType);
+
 			foreach (var type in types)
 			{
 				if (type.IsDefined(typeof(ObsoleteAttribute)))
@@ -98,7 +99,7 @@ namespace Smidgenomics.Unity.UAI.Editor
 					continue;
 				}
 				
-				if (!type.IsDefined(typeof(SerializableAttribute)))
+				if (!isUnityBase && !type.IsDefined(typeof(SerializableAttribute)))
 				{
 					continue;
 				}
@@ -107,7 +108,7 @@ namespace Smidgenomics.Unity.UAI.Editor
 				{
 					continue;
 				}
-
+				
 				if (currentAssembly != type.Assembly)
 				{
 					if (currentAssembly != null)

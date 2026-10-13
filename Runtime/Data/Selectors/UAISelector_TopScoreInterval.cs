@@ -7,7 +7,8 @@ namespace Smidgenomics.Unity.UAI
 	using System.ComponentModel;
 
 	[DisplayName("Top Score %")]
-	[System.Serializable]
+	[Serializable]
+	[UAIDebugIcon(UAIConstants.UAI_ATLAS_GUID, "58/8")]
 	public sealed class UAISelector_TopScoreInterval : UAISelector
 	{
 		public override int SelectIndex(int count, Func<int, float> scoreFn)
@@ -30,11 +31,6 @@ namespace Smidgenomics.Unity.UAI
 				return indices[UAIMath.GetRandomArrayIndexWeighted<float>(scores)];
 			}
 			return indices[UnityEngine.Random.Range(0, indices.Count - 1)];
-		}
-
-		public override (string, Rect) GetDebugIcon()
-		{
-			return ("a1446d554144a4944b389210a34ff6b9", new Rect(0.125f * 2, 0.125f * 7, 0.125f, 0.125f));
 		}
 
 		[Range(0, 1)]

@@ -8,7 +8,7 @@ namespace Smidgenomics.Unity.UAI.Editor
 	using UnityEditor;
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
+	using System.Reflection;
 
 	internal sealed class UAIWindow_Monitor : EditorWindow
 	{
@@ -494,7 +494,17 @@ namespace Smidgenomics.Unity.UAI.Editor
 			{
 				return outIcon;
 			}
-			var (guid, coords) = selector.GetDebugIcon();
+
+			var attr = selector.GetType().GetCustomAttribute<UAIDebugIconAttribute>();
+
+			if (attr == null)
+			{
+				_cachedSelectorIcons[selector.GetType()] = default;
+				return default;
+			}
+
+			var guid = attr.texRef;
+			var coords = attr.uv;
 			var tex = !string.IsNullOrEmpty(guid)
 			? LoadFromGUID<Texture2D>(guid)
 			: null;
