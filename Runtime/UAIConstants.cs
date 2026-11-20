@@ -7,7 +7,7 @@ namespace Smidgenomics.Unity.UAI
 		// asset context path
 		public const string SO_CREATE_PATH = "Utility AI/"; // [CreateAssetMenu]
 		public const string AC_PATH = "Smidgenomics/Utility AI/"; // [AddComponent]
-		public const string RES_PATH = "smidgenomics.uai"; // path in Resources
+		public const string RES_PATH = "com.smidgenomics.unity-uai"; // path in Resources
 		public const string WIN_PATH_DEBUG = "Window/AI/UAI Monitor";
 		public const float MIN_COOLDOWN = 0f;
 		public const float MIN_SCORING_RATE = 0.1f;
